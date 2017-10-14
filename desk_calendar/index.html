@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://fonts.googleapis.com/css?family=Merriweather" rel="stylesheet">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="http://code.jquery.com/jquery.js"></script> 	
+ 	<link href="css/flags.css" rel="stylesheet" media="screen">
+	<link href="css/style.css" rel="stylesheet" media="screen">
+  </head>
+  
+  <body>
+	<div style="display:flex; flex-direction: row">
+		<div style="display: flex; flex-direction: column; margin-right: 20px">
+			<div style="display:flex; flex-direction:row" >
+				<div class="currencies" >
+					<h4 >Курсы валют:</h4>
+					<table class="res"></table>
+				</div>
+				<div class="calccurr" >
+					<h4>Пересчет</h4>
+					<div style="height: 40px">
+						<select id="listCurr" style="width:65px; float:left; margin-right: 20px" onchange="funcChange()">
+							<option value="USD">USD</option>
+							<option value="EUR">EUR</option>
+							<option value="RUB">RUB</option>
+							<option value="JPY">JPY</option>
+						</select>
+						<span style="left: 75px; font-size: 120%" id="valCurr"></span>
+					</div>
+					<p>Количество:</p>
+					<input type="text" id="quantity" style="width: 100px;" oninput="funcCalc()">
+					<p>Итого: <span id="result" style="font-size: 120%; "></span></p>
+					
+				</div>
+			</div>
+			<div id="map" style="width: 400px; height: 400px; border: solid white 5px; border-radius: 10px; margin-left:15px;top: 20px"></div>
+		</div>
+			
+			<div style="display:flex; flex-direction: row; ">
+				<div style="display:flex; flex-direction: column">
+					<div class="clock" id="clock">12:00:00</div>
+					<div class="calendar">
+						<div class="year">
+							<button class="prev" onclick="changeYear(-1)">&#10094;</button>
+							<button class="next" onclick="changeYear(1)">&#10095;</button>
+							<div class="name" id="year">2000</div>
+						</div>
+						<div class="month">
+							<button class="prev" onclick="changeMonth(-1)">&#10094;</button>
+							<button class="next" onclick="changeMonth(1)">&#10095;</button>
+							<div class="name" id="month">January</div>
+						</div>
+						<div class="table">
+							<table border-collapse="collapse">
+								<tr>
+								<th>Пн</th>
+								<th>Вт</th>
+								<th>Ср</th>
+								<th>Чт</th>
+								<th>Пт</th>
+								<th>Сб</th>
+								<th>Вс</th>
+							  </tr>
+							  <tr>
+								<td id="d1" class="dat"></td>
+								<td id="d2" class="dat"></td>
+								<td id="d3" class="dat"></td>
+								<td id="d4" class="dat"></td>
+								<td id="d5" class="dat"></td>
+								<td id="d6" class="dat"></td>
+								<td id="d7" class="dat"></td>
+							  </tr>
+							  <tr>
+								<td id="d8" class="dat"></td>
+								<td id="d9" class="dat"></td>
+								<td id="d10" class="dat"></td>
+								<td id="d11" class="dat"></td>
+								<td id="d12" class="dat"></td>
+								<td id="d13" class="dat"></td>
+								<td id="d14" class="dat"></td>
+							  </tr>
+							  <tr>
+								<td id="d15" class="dat"></td>
+								<td id="d16" class="dat"></td>
+								<td id="d17" class="dat"></td>
+								<td id="d18" class="dat"></td>
+								<td id="d19" class="dat"></td>
+								<td id="d20" class="dat"></td>
+								<td id="d21" class="dat"></td>
+							  </tr>
+							  <tr>
+								<td id="d22" class="dat"></td>
+								<td id="d23" class="dat"></td>
+								<td id="d24" class="dat"></td>
+								<td id="d25" class="dat"></td>
+								<td id="d26" class="dat"></td>
+								<td id="d27" class="dat"></td>
+								<td id="d28" class="dat"></td>
+							  </tr>
+							  <tr>
+								<td id="d29" class="dat"></td>
+								<td id="d30" class="dat"></td>
+								<td id="d31" class="dat"></td>
+								<td id="d32" class="dat"></td>
+								<td id="d33" class="dat"></td>
+								<td id="d34" class="dat"></td>
+								<td id="d35" class="dat"></td>
+							  </tr>
+							  <tr>
+								<td id="d36" class="dat"></td>
+								<td id="d37" class="dat"></td>
+								<td id="d38" class="dat"></td>
+								<td id="d39" class="dat"></td>
+								<td id="d40" class="dat"></td>
+								<td id="d41" class="dat"></td>
+								<td id="d42" class="dat"></td>
+							  </tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			
+				<div style="display: flex; flex-direction: column">
+					<div style="display:flex; flex-direction: row">
+						<div class="weather" >
+							<div id="pic"></div>
+							<h4>Погода</h4>
+							<br><br><br>
+							<p style="padding-left: 10px">Температура: <span id="grad"></span></p>
+							<p style="padding-left: 10px">Влажность: <span id="humid"></span></p>
+							<p style="padding-left: 10px">Давление: <span id="pres"></span></p>
+						</div>
+						<div class="weather">
+							<h4>Выберите город:</h4>
+							<select id="place" style="width: 150px" onchange="choosePlace()"></select>
+							<h4>Добавить в список:</h4>
+							<input id="newPlace" type="text" style="width: 150px">
+							<input type="submit" value="Добавить" onclick="addPlace()">
+						</div>
+					</div>	
+					<div class="game">
+						<table>
+							<tr>
+								<td>
+									<div class="card" id="card1" onclick="onRotate(this.id)">
+										<div class="card_back"></div>
+										<div class="card_front" style="background-image: url('img/F.png')"></div>
+									</div>
+								</td>
+								<td>
+									<div class="card" id="card2" onclick="onRotate(this.id)">
+										<div class="card_back"></div>
+										<div class="card_front" style="background-image: url('img/A.png')"></div>
+									</div>
+								</td>
+								<td>
+									<div class="card" id="card3" onclick="onRotate(this.id)">
+										<div class="card_back"></div>
+										<div class="card_front" style="background-image: url('img/F.png')"></div>
+									</div>
+								</td>
+								<td>
+									<div class="card" id="card4" onclick="onRotate(this.id)">
+										<div class="card_back"></div>
+										<div class="card_front" style="background-image: url('img/A.png')"></div>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div class="card" id="card5" onclick="onRotate(this.id)">
+										<div class="card_back"></div>
+										<div class="card_front" style="background-image: url('img/B.png')"></div>
+									</div>
+								</td>
+								<td>
+									<div class="card" id="card6" onclick="onRotate(this.id)">
+										<div class="card_back"></div>
+										<div class="card_front" style="background-image: url('img/C.png')"></div>
+									</div>
+								</td>
+								<td>
+									<div class="card" id="card7" onclick="onRotate(this.id)">
+										<div class="card_back"></div>
+										<div class="card_front" style="background-image: url('img/B.png')"></div>
+									</div>
+								</td>
+								<td>
+									<div class="card" id="card8" onclick="onRotate(this.id)">
+										<div class="card_back"></div>
+										<div class="card_front" style="background-image: url('img/C.png')"></div>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div class="card" id="card9" onclick="onRotate(this.id)">
+										<div class="card_back"></div>
+										<div class="card_front" style="background-image: url('img/D.png')"></div>
+									</div>
+								</td>
+								<td>
+									<div class="card" id="card10" onclick="onRotate(this.id)">
+										<div class="card_back"></div>
+										<div class="card_front" style="background-image: url('img/E.png')"></div>
+									</div>
+								</td>
+								<td>
+									<div class="card" id="card11" onclick="onRotate(this.id)">
+										<div class="card_back"></div>
+										<div class="card_front" style="background-image: url('img/D.png')"></div>
+									</div>
+								</td>
+								<td>
+									<div class="card" id="card12" onclick="onRotate(this.id)">
+										<div class="card_back"></div>
+										<div class="card_front" style="background-image: url('img/E.png')"></div>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<div class="card" id="card13" onclick="onRotate(this.id)">
+										<div class="card_back"></div>
+										<div class="card_front" style="background-image: url('img/G.png')"></div>
+									</div>
+								</td>
+								<td>
+									<div class="card" id="card14" onclick="onRotate(this.id)">
+										<div class="card_back"></div>
+										<div class="card_front" style="background-image: url('img/H.png')"></div>
+									</div>
+								</td>
+								<td>
+									<div class="card" id="card15" onclick="onRotate(this.id)">
+										<div class="card_back"></div>
+										<div class="card_front" style="background-image: url('img/H.png')"></div>
+									</div>
+								</td>
+								<td>
+									<div class="card" id="card16" onclick="onRotate(this.id)">
+										<div class="card_back"></div>
+										<div class="card_front" style="background-image: url('img/G.png')"></div>
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>	
+<!---			</div> -->
+		</div>
+	<script>
+	</script>
+	<script src="js/script.js"></script> 
+	<script src="https://maps.googleapis.com/maps/api/js?callback=myMap"></script> 
+  </body>
+
+</html>
