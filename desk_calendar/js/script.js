@@ -1,65 +1,4 @@
-/////////////*******часы в виде объекта*******////////////
 
-function Clock(options) {
-
-  this.template = options.template;
-  var timer;
-}
-  Clock.prototype._render = function render() {
-  
-    var date = new Date();
-
-    var hours = date.getHours();
-    if (hours < 10) hours = '0' + hours;
-
-    var min = date.getMinutes();
-    if (min < 10) min = '0' + min;
-
-    var sec = date.getSeconds();
-    if (sec < 10) sec = '0' + sec;
-
-    var output = this.template.replace('h', hours).replace('m', min).replace('s', sec);
-
- //   console.log(output);
-  }
-
-  Clock.prototype.stop = function() {
-    clearInterval(timer);
-  };
-
-  Clock.prototype.start = function() {
-    render();
-	timer = setInterval(render, 1000);
-  }
-
-  function ExtClock(options){
-//		console.log('ExtClockConstructor');
-		Clock.apply(this, arguments);
-		this._precision = options.precision;// || 1000;
-//		console.log('precision = ' + this._precision);
-	}
-	
-	ExtClock.prototype = Object.create(Clock.prototype);
-	
-	ExtClock.prototype.start = function(){
-//	console.log('ExtClock');
-		this._render();
-		var self = this;
-		this._timer = setInterval(function(){
-			self._render();
-			}, this._precision);
-	
-	}
-	
-  /*  var clock = new Clock({
-      template: 'h:m:s'
-    });
-	
-    clock.start(); */
-	var clock = new ExtClock({template: 'h:m:s',precision: 1000});
-//	clock.start();
-
-//////////////***************/////////////		
 	
 /*		function startGame(sz) {
 			for(var i=0; i < sz; i++){
@@ -137,11 +76,8 @@ function Clock(options) {
 				else if(saved_card === strCurr){
 					$(saved_card).toggleClass("flipped");
 				}else{
-					console.log("+++");
 					this_card = strCurr;
 					$(this_card).addClass("flipped");
-					console.log(strCurr);
-					
 					setTimeout(removeFlip, 800);
 				}
 			}
@@ -165,8 +101,6 @@ function Clock(options) {
 				sec = "0" + sec;
 			document.getElementById("clock").innerHTML = hour + ":" + min + ":" + sec;
 		}
-		outputTime(); 
-		setInterval(outputTime, 1000);
 		
 		function outputDate(isToday) {
 			clearCalend();
@@ -186,7 +120,6 @@ function Clock(options) {
 			fillDays(wday_b);
 			changeBackForMonth();
 		}
-		outputDate("today");
 		
 		function calcBeginMonth(dy, mon, year) {
 			dy = parseInt(dy);
@@ -304,15 +237,10 @@ function Clock(options) {
 				for(var i=0; i < data.length; i++){
 					if(data[i].Cur_Abbreviation === "EUR" || data[i].Cur_Abbreviation === "USD" || data[i].Cur_Abbreviation === "RUB" || data[i].Cur_Abbreviation === "JPY") {
 						var row = document.createElement("tr");
-
 						var col1 = document.createElement("td");
-			//			col1.innerHTML = data[i].Cur_Abbreviation;
-
 						var img = document.createElement("img");
-						
 						var col2 = document.createElement("td");
 						col2.innerHTML = data[i].Cur_Scale + " " + data[i].Cur_Name;
-
 						var col3 = document.createElement("td");
 						col3.id = data[i].Cur_Abbreviation;
 						col3.innerHTML = data[i].Cur_OfficialRate;	
@@ -332,7 +260,41 @@ function Clock(options) {
 				
 		    }).error(function (err) {alert('ошибка');});
         };
-		ratestoday(0);
+		
+		function funcChange() {
+			var idCurr = document.getElementById("listCurr").value;
+			for(var i=0; i < arrCurrencies.length; i++)
+			{
+				if(arrCurrencies[i].Cur_Abbreviation !== idCurr)
+					continue;
+				
+				document.getElementById("valCurr").innerHTML = arrCurrencies[i].Cur_OfficialRate;
+				break;
+			}
+			if(document.getElementById("quantity").value !== "")
+				funcCalc();
+		}
+
+		var strQuan = "";
+		function funcCalc() {
+			var quan = document.getElementById("quantity").value;
+			if(!/^[1-9][0-9]*$/.test(quan)){
+				document.getElementById("quantity").value = strQuan;
+				return;
+			}
+			strQuan = quan;
+			var res = 0;
+			var currAbbr = document.getElementById("listCurr").value;
+			console.log(currAbbr);
+			for(var i=0; i < arrCurrencies.length; i++)
+			{
+				if(arrCurrencies[i].Cur_Abbreviation !== currAbbr)
+					continue;
+				res = arrCurrencies[i].Cur_OfficialRate * quan / arrCurrencies[i].Cur_Scale;
+				break;
+			}
+			document.getElementById("result").innerHTML = res.toFixed(2);
+		}
 		
 		function myMap() {
 			var mapOptions = {
@@ -345,7 +307,6 @@ function Clock(options) {
 ///////weather//////////////	
 //		localStorage.setItem("place", "Minsk");
 		var placeArray = new Array();
-		getStorage();
 		function getWeather(plc) {
 			if(plc.length == 0)
 			{
@@ -353,9 +314,7 @@ function Clock(options) {
 				fillStorage("Minsk");
 			}
 			var str = "http://api.openweathermap.org/data/2.5/weather?q=" + plc + "&units=metric&APPID=d6d80fd647a85398205dd2295e192f7c";
-//			console.log(str);
 			$.getJSON(str)
-//			$.getJSON('http://api.openweathermap.org/data/2.5/weather?q=Minsk&units=metric&APPID=fe464d365c95c2f80dbcc6cbe99c84e7')
 			.done(function (data) {
 				document.getElementById("grad").innerHTML = "&nbsp" + "&nbsp" + "&nbsp" + data.main.temp + '&deg' + "C";
 				document.getElementById("humid").innerHTML = "&nbsp" + "&nbsp" + "&nbsp" + data.main.humidity + "%";
@@ -371,10 +330,8 @@ function Clock(options) {
 					document.getElementById("pic").style.backgroundImage = "url(img/cloud.png)";
 				else if(data.weather[0].main === "Mist" || data.weather[0].main === "Haze")
 					document.getElementById("pic").style.backgroundImage = "url(img/mist.png)";				
-//				console.log(data.weather[0].main);
 			}).error(function (err) {alert('ошибка');});
 		}
-		getWeather(placeArray[0]);
 		
 		function fillStorage(str) {
 			var strStorage = placeArray.join(",");
@@ -386,40 +343,39 @@ function Clock(options) {
 		function getStorage() {
 			var strStorage = new String();
 			strStorage = localStorage.getItem("place");
+			console.log(strStorage);
 			if(strStorage === null)
 				return;
 			if(strStorage.length != 0)
 				placeArray = strStorage.split(",");
-//			console.log(placeArray);
 		}
 		
 		function addPlace() {
 			var val = document.getElementById("newPlace").value;
-	//		if(val.length > 0){
-	//			placeArray[placeArray.length] = val;
-	//		}
 			fillStorage(val);
+			getStorage();
 			document.getElementById("newPlace").value = "";
-			fillPlacesList();
+			appendPlace(placeArray[placeArray.length-1],placeArray.length-1);
+			document.getElementById("place").lastChild.setAttribute("selected", "selected");
+			choosePlace();
 		}
 		
 		function clearPlaceSelect() {
 			var listPlaces = document.getElementById("place").getElementsByTagName("option");
-		
 			for(var i=listPlaces.length; i > 0 ; i--)
 				document.getElementById("place").removeChild(listPlaces[i-1]);
 		}
-		
-		function fillPlacesList() {
-			clearPlaceSelect();
-			getStorage();
-			for(var i=0; i < placeArray.length; i++){
-				var tmp = document.createElement("option");
-				tmp.innerHTML = placeArray[i];
-				document.getElementById("place").appendChild(tmp);
-			}
+
+		function appendPlace(item, index){
+			var tmp = document.createElement("option");
+			tmp.innerHTML = item;
+			document.getElementById("place").appendChild(tmp);
 		}
-		fillPlacesList();
+
+		function fillPlacesList() {
+			getStorage();
+			placeArray.forEach(appendPlace);
+		}
 		
 		function choosePlace(){
 			plc = document.getElementById("place").value;
@@ -443,34 +399,6 @@ function Clock(options) {
 			console.log(str);
 		}
 	
-		function funcChange() {
-			var idCurr = document.getElementById("listCurr").value;
-			for(var i=0; i < arrCurrencies.length; i++)
-			{
-				if(arrCurrencies[i].Cur_Abbreviation !== idCurr)
-					continue;
-				
-				document.getElementById("valCurr").innerHTML = arrCurrencies[i].Cur_OfficialRate;
-				break;
-			}
-			if(document.getElementById("quantity").value !== "")
-				funcCalc();
-		}
-		
-		function funcCalc() {
-			var quan = document.getElementById("quantity").value;
-			var res = 0;
-			var currAbbr = document.getElementById("listCurr").value;
-			console.log(currAbbr);
-			for(var i=0; i < arrCurrencies.length; i++)
-			{
-				if(arrCurrencies[i].Cur_Abbreviation !== currAbbr)
-					continue;
-				res = arrCurrencies[i].Cur_OfficialRate * quan / arrCurrencies[i].Cur_Scale;
-				break;
-			}
-			document.getElementById("result").innerHTML = res.toFixed(2);
-		}
 /*		
 		function makeCounter(){
 			var currentCount = 1;
