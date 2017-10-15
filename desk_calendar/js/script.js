@@ -1,5 +1,3 @@
-
-	
 /*		function startGame(sz) {
 			for(var i=0; i < sz; i++){
 				var td = document.createElement("td");
@@ -8,6 +6,39 @@
 			}
 		
 		}*/
+		var images = ["url('img/A.png')", 
+						"url('img/B.png')",
+						"url('img/C.png')",
+						"url('img/D.png')",
+						"url('img/E.png')",
+						"url('img/F.png')",
+						"url('img/G.png')",
+						"url('img/H.png')",];
+		function randomizingStart(){
+			var cards = document.getElementsByClassName("card_front");
+			var ind=0;
+			var i;
+			var arrImg = Array(cards.length);
+			console.log(arrImg[0]);
+			function f(item){
+				while(true){
+					i = Math.floor((Math.random()* cards.length));
+					if(arrImg[i] === undefined){
+						arrImg[i] = item;
+						break;
+					}
+				}
+			}
+			images.forEach(function(item, index){
+					f(item);
+					f(item);
+				});
+			console.log(arrImg);
+			$(".card_front").each(function(index, element){
+					$(element).css("background-image", arrImg[index]);
+				})
+		}
+		
 		var saved_img = "";
 		var saved_card = "";
 		var this_card = "";
@@ -37,8 +68,13 @@
 					return false;
 				}
 			})
-			if(isOver)
+			if(isOver){
 				alert("Вы победили!");
+				$(".card").each(function(index, element){
+					$(element).removeClass("flipped");
+				})
+				randomizingStart();
+			}
 		}
 		
 		var arrFlipped = new Array();
@@ -56,17 +92,17 @@
 			})
 			//если это первый клик, запомнили картинку
 			if(counter === 0) {
-				console.log(counter);
+	//			console.log(counter);
 				saved_img = $(strCurr).children(".card_front").first().css("background-image");
 				saved_card = strCurr;
 				$(saved_card).toggleClass("flipped");
-				console.log(saved_img);
+	//			console.log(saved_img);
 			}
 			//если это второй клик, сверили картинки и, если они совпали, отключили клики.
 			else if(counter === 1){
-			console.log(counter);
+	//		console.log(counter);
 				if($(curr_front).css("background-image") === saved_img && saved_card !== strCurr) {
-					console.log("===");
+	//				console.log("===");
 					$(strCurr).toggleClass("flipped");
 					$(strCurr).unbind("click");
 					$(saved_card).unbind("click");
@@ -78,10 +114,10 @@
 				}else{
 					this_card = strCurr;
 					$(this_card).addClass("flipped");
-					setTimeout(removeFlip, 800);
+					setTimeout(removeFlip, 600);
 				}
 			}
-			 setTimeout(CheckOver, 800);
+			 setTimeout(CheckOver, 600);
 		}
 ///////////////////////		
 		var year;
