@@ -1,11 +1,3 @@
-/*		function startGame(sz) {
-			for(var i=0; i < sz; i++){
-				var td = document.createElement("td");
-				var card = document.createElement("div");
-				card.
-			}
-		
-		}*/
 		var images = ["url('img/A.png')", 
 						"url('img/B.png')",
 						"url('img/C.png')",
@@ -19,7 +11,6 @@
 			var ind=0;
 			var i;
 			var arrImg = Array(cards.length);
-			console.log(arrImg[0]);
 			function f(item){
 				while(true){
 					i = Math.floor((Math.random()* cards.length));
@@ -33,7 +24,6 @@
 					f(item);
 					f(item);
 				});
-			console.log(arrImg);
 			$(".card_front").each(function(index, element){
 					$(element).css("background-image", arrImg[index]);
 				})
@@ -46,10 +36,7 @@
 		function onRotate(clicked_id) {
 			var idCurr = "#" + clicked_id;
 			console.log("click: " + idCurr);
-		//	saved_card = idCurr
 			 onCheck(clicked_id);
-	//		$(idCurr).toggleClass("flipped");
-	//		setTimeout(removeFlip, 800);
 		}
 		
 		function removeFlip(){ 
@@ -342,12 +329,13 @@
 		}
 ///////weather//////////////	
 //		localStorage.setItem("place", "Minsk");
+		
 		var placeArray = new Array();
 		function getWeather(plc) {
-			if(plc.length == 0)
+			if(plc === "" || plc === undefined)
 			{
 				plc = "Minsk";
-				fillStorage("Minsk");
+				fillStorage(plc);
 			}
 			var str = "http://api.openweathermap.org/data/2.5/weather?q=" + plc + "&units=metric&APPID=d6d80fd647a85398205dd2295e192f7c";
 			$.getJSON(str)
@@ -370,24 +358,33 @@
 		}
 		
 		function fillStorage(str) {
-			var strStorage = placeArray.join(",");
-			strStorage += ",";
-			strStorage += str;
+			var strStorage;
+			if(localStorage.getItem("place") !== null){
+				strStorage = placeArray.join(",");
+				strStorage += ",";
+				strStorage += str;
+			}
+			else
+				strStorage = str;
+
 			localStorage.place = strStorage;
 		}
 
 		function getStorage() {
 			var strStorage = new String();
 			strStorage = localStorage.getItem("place");
-			console.log(strStorage);
 			if(strStorage === null)
 				return;
 			if(strStorage.length != 0)
 				placeArray = strStorage.split(",");
 		}
 		
-		function addPlace() {
-			var val = document.getElementById("newPlace").value;
+		function addPlace(plc) {
+			var val;
+			if(!plc)
+				val = document.getElementById("newPlace").value;
+			else
+				val = plc;
 			fillStorage(val);
 			getStorage();
 			document.getElementById("newPlace").value = "";
